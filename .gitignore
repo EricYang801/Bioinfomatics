@@ -1,2 +1,7 @@
 # os-system specific files
 .DS_Store
+
+# Big and Cached files
+Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa
+Homo_sapiens.GRCh38.108.gtf
+*.fai

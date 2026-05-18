@@ -90,3 +90,6 @@ GFF3：
 grep 'Name=ATAD3B' annotation.gff3
 grep 'ID=gene:ENSG00000160072' annotation.gff3
 ```
+
+因此如果純粹找基因完整的位子時，feature 為gene，attribute 為 gene_id 或 gene_name 就好：
+1	ensembl_havana	gene	1471765	1497848	.	+	.	gene_id "ENSG00000160072"; gene_version "20"; gene_name "ATAD3B"; gene_source "ensembl_havana"; gene_biotype "protein_coding";
