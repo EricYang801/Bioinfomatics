@@ -4,7 +4,7 @@ Archive:
 `upstream_by_gene_GRCh38_Ensembl108_reference_orientation.tar.gz`
 
 SHA256:
-`8f82f9b6d26237f124ac0ed0ba4a5bd1844a57d9464973b74c3be05a5bb0f39a`
+`fc6c81e87154b3c679ee4b0b7dc1da627d3e1704fdb46df2a86d9ed90c063fb9`
 
 Contents:
 - `upstream_by_gene/all_genes/1000bp/{plus,minus}/`
@@ -32,3 +32,5 @@ Validation summary:
 - FASTA files written: 188,109
 - Verified OK against the original reference FASTA: 188,109
 - Verification failed: 0
+- Extra ATAD3B FASTA files included: 3
+- Archive metadata entries (`._*`): 0
