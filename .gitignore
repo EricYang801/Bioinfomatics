@@ -4,4 +4,12 @@
 # Big and Cached files
 Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa
 Homo_sapiens.GRCh38.108.gtf
+Homo_sapiens.GRCh38.dna_sm.primary_assembly.release108.full.fa
+Homo_sapiens.GRCh38.dna_sm.primary_assembly.release108.full.fa.gz
+ensembl_release108_homo_sapiens_dna_CHECKSUMS
+upstream_by_gene/
+online_validation/
 *.fai
+
+/__pycache__
+*.pyc
