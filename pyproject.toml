@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools>=68"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "trf1-overlap"
+version = "0.1.0"
+description = "TRF1 ChIP-seq peak overlap with DEG promoter regions"
+readme = "README.md"
+license = { text = "MIT" }
+requires-python = ">=3.12"
+authors = [{ name = "Eric Yang", email = "jie9481@gmail.com" }]
+dependencies = [
+    "pandas>=2.0",
+    "matplotlib>=3.7",
+    "pybedtools>=0.12",
+]
+
+[project.scripts]
+trf1-promoter-overlap = "trf1_overlap.cli:main"
+
+[project.urls]
+Homepage = "https://github.com/EricYang801/Bioinfomatics"
+
+[tool.setuptools.packages.find]
+where = ["src"]

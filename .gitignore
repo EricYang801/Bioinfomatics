@@ -1,15 +1,29 @@
-# os-system specific files
+# OS metadata
 .DS_Store
 
-# Big and Cached files
+# Large reference data — fetch from Ensembl, do not commit
 Homo_sapiens.GRCh38.dna_sm.primary_assembly.fa
 Homo_sapiens.GRCh38.108.gtf
 Homo_sapiens.GRCh38.dna_sm.primary_assembly.release108.full.fa
 Homo_sapiens.GRCh38.dna_sm.primary_assembly.release108.full.fa.gz
 ensembl_release108_homo_sapiens_dna_CHECKSUMS
-upstream_by_gene/
-online_validation/
 *.fai
 
-/__pycache__
+# Pipeline outputs
+results/
+results_*/
+upstream_by_gene/
+online_validation/
+
+# Python build / cache
+__pycache__/
 *.pyc
+*.egg-info/
+build/
+dist/
+.eggs/
+
+# Virtualenvs / editor scratch
+.venv/
+.env
+.idea/

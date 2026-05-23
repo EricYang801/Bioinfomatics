@@ -1,0 +1,14 @@
+name: Bioinfomatics
+channels:
+  - conda-forge
+  - bioconda
+dependencies:
+  - python=3.12
+  - pandas
+  - matplotlib
+  - pybedtools
+  - bedtools
+  - pyfaidx
+  - pip
+  - pip:
+      - -e .
