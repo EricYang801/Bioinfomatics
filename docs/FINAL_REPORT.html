@@ -4,8 +4,138 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>siTRF1 × TRF1 ChIP-seq 完整分析報告 (v3)</title>
+  <title>TRF1 ChIP-seq × siTRF1 RNA-seq Integration Report</title>
   <style>
+    html {
+      line-height: 1.5;
+      font-family: Georgia, serif;
+      font-size: 20px;
+      color: #1a1a1a;
+      background-color: #fdfdfd;
+    }
+    body {
+      margin: 0 auto;
+      max-width: 36em;
+      padding-left: 50px;
+      padding-right: 50px;
+      padding-top: 50px;
+      padding-bottom: 50px;
+      hyphens: auto;
+      word-wrap: break-word;
+      text-rendering: optimizeLegibility;
+      font-kerning: normal;
+    }
+    @media (max-width: 600px) {
+      body {
+        font-size: 0.9em;
+        padding: 1em;
+      }
+    }
+    @media print {
+      body {
+        background-color: transparent;
+        color: black;
+        font-size: 12pt;
+      }
+      p, h2, h3 {
+        orphans: 3;
+        widows: 3;
+      }
+      h2, h3, h4 {
+        page-break-after: avoid;
+      }
+    }
+    p {
+      margin: 1em 0;
+    }
+    a {
+      color: #1a1a1a;
+    }
+    a:visited {
+      color: #1a1a1a;
+    }
+    img {
+      max-width: 100%;
+    }
+    h1, h2, h3, h4, h5, h6 {
+      margin-top: 1.4em;
+    }
+    h5, h6 {
+      font-size: 1em;
+      font-style: italic;
+    }
+    h6 {
+      font-weight: normal;
+    }
+    ol, ul {
+      padding-left: 1.7em;
+      margin-top: 1em;
+    }
+    li > ol, li > ul {
+      margin-top: 0;
+    }
+    blockquote {
+      margin: 1em 0 1em 1.7em;
+      padding-left: 1em;
+      border-left: 2px solid #e6e6e6;
+      color: #606060;
+    }
+    code {
+      font-family: Menlo, Monaco, 'Lucida Console', Consolas, monospace;
+      font-size: 85%;
+      margin: 0;
+    }
+    pre {
+      margin: 1em 0;
+      overflow: auto;
+    }
+    pre code {
+      padding: 0;
+      overflow: visible;
+    }
+    .sourceCode {
+     background-color: transparent;
+     overflow: visible;
+    }
+    hr {
+      background-color: #1a1a1a;
+      border: none;
+      height: 1px;
+      margin: 1em 0;
+    }
+    table {
+      margin: 1em 0;
+      border-collapse: collapse;
+      width: 100%;
+      overflow-x: auto;
+      display: block;
+      font-variant-numeric: lining-nums tabular-nums;
+    }
+    table caption {
+      margin-bottom: 0.75em;
+    }
+    tbody {
+      margin-top: 0.5em;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+    }
+    th {
+      border-top: 1px solid #1a1a1a;
+      padding: 0.25em 0.5em 0.25em 0.5em;
+    }
+    td {
+      padding: 0.125em 0.5em 0.25em 0.5em;
+    }
+    header {
+      margin-bottom: 4em;
+      text-align: center;
+    }
+    #TOC li {
+      list-style: none;
+    }
+    #TOC a:not(:hover) {
+      text-decoration: none;
+    }
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
     span.underline{text-decoration: underline;}
@@ -77,42 +207,14 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
-  <link rel="stylesheet" href="data:text/css,body%7Bfont%2Dfamily%3A%2Dapple%2Dsystem%2CBlinkMacSystemFont%2C%22Helvetica%20Neue%22%2Csans%2Dserif%3Bmax%2Dwidth%3A880px%3Bmargin%3A2em%20auto%3Bpadding%3A0%201%2E5em%3Bcolor%3A%23222%3Bline%2Dheight%3A1%2E55%3B%7D%0Ah1%2Ch2%2Ch3%7Bborder%2Dbottom%3A1px%20solid%20%23ddd%3Bpadding%2Dbottom%3A%2E2em%3B%7D%0Ah1%7Bfont%2Dsize%3A1%2E8em%3B%7Dh2%7Bfont%2Dsize%3A1%2E35em%3Bmargin%2Dtop%3A1%2E8em%3B%7Dh3%7Bfont%2Dsize%3A1%2E1em%3Bborder%3A0%3B%7D%0Acode%7Bbackground%3A%23f4f4f4%3Bpadding%3A1px%205px%3Bborder%2Dradius%3A3px%3Bfont%2Dsize%3A%2E92em%3B%7D%0Apre%7Bbackground%3A%23f6f8fa%3Bpadding%3A12px%2014px%3Bborder%2Dradius%3A6px%3Boverflow%2Dx%3Aauto%3B%7D%0Apre%20code%7Bbackground%3Anone%3Bpadding%3A0%3B%7D%0Atable%7Bborder%2Dcollapse%3Acollapse%3Bmargin%3A1em%200%3Bfont%2Dsize%3A%2E92em%3B%7D%0Ath%2Ctd%7Bborder%3A1px%20solid%20%23ccc%3Bpadding%3A6px%2010px%3Btext%2Dalign%3Aleft%3B%7D%0Ath%7Bbackground%3A%23f0f0f0%3B%7D%0Ablockquote%7Bborder%2Dleft%3A3px%20solid%20%23ccc%3Bcolor%3A%23555%3Bmargin%3A1em%200%3Bpadding%3A%2E2em%201em%3B%7D%0Aa%7Bcolor%3A%230366d6%3B%7D%0A" />
   <!--[if lt IE 9]>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5shiv/3.7.3/html5shiv-printshiv.min.js"></script>
   <![endif]-->
 </head>
 <body>
 <header id="title-block-header">
-<h1 class="title">siTRF1 × TRF1 ChIP-seq 完整分析報告 (v3)</h1>
+<h1 class="title">TRF1 ChIP-seq × siTRF1 RNA-seq Integration Report</h1>
 </header>
-<nav id="TOC" role="doc-toc">
-<ul>
-<li><a href="#sitrf1-trf1-chip-seq-整合分析完整報告">siTRF1 × TRF1 ChIP-seq 整合分析｜完整報告</a>
-<ul>
-<li><a href="#tldr一段話結論">TL;DR（一段話結論）</a></li>
-<li><a href="#輸入資料">1. 輸入資料</a></li>
-<li><a href="#基因組版本判定">2. 基因組版本判定</a></li>
-<li><a href="#beta-分析">3. BETA 分析</a></li>
-<li><a href="#beta-minus-獨立路徑驗證">4. BETA minus 獨立路徑驗證</a></li>
-<li><a href="#手刻-python-第三條路徑驗證">5. 手刻 Python 第三條路徑驗證</a></li>
-<li><a href="#背景比例對照為什麼-1-個-顯著">6. 背景比例對照（為什麼 1 個 ≠ 顯著）</a></li>
-<li><a href="#重要盲點hg18.refseq-沒有-chrm-條目">7. 重要盲點：hg18.refseq 沒有 chrM 條目</a></li>
-<li><a href="#bioinfomatics-repo-自製-pipeline-結果">8. Bioinfomatics repo 自製 pipeline 結果</a></li>
-<li><a href="#多顯著性閾值的-strand-aware-promoter-分析">9. 多顯著性閾值的 strand-aware promoter 分析</a></li>
-<li><a href="#文獻驗證">10. 文獻驗證</a></li>
-<li><a href="#生物學解讀">11. 生物學解讀</a></li>
-<li><a href="#最終結論">12. 最終結論</a></li>
-<li><a href="#所有產生的檔案總覽已整合進-bioinfomatics-repo">13. 所有產生的檔案總覽（已整合進 Bioinfomatics repo）</a></li>
-<li><a href="#chea3-tf-enrichment-第三方驗證">14. ChEA3 TF enrichment 第三方驗證</a></li>
-<li><a href="#enrichr-pathway-ontology-enrichment直接證實-indirect-cascade">15. Enrichr Pathway / Ontology Enrichment（直接證實 indirect cascade）</a></li>
-<li><a href="#ttaggg-cognate-motif-scan序列層面排除直接結合">16. TTAGGG cognate motif scan（序列層面排除直接結合）</a></li>
-<li><a href="#新版資料與-alphagenome-補充檢查不做-hg18-liftover">17. 新版資料與 AlphaGenome 補充檢查（不做 hg18 liftover）</a></li>
-<li><a href="#給教授可直接引用的版本">18. 給教授可直接引用的版本</a></li>
-<li><a href="#附錄-a參考文獻">附錄 A：參考文獻</a></li>
-</ul></li>
-</ul>
-</nav>
 <h1 id="sitrf1-trf1-chip-seq-整合分析完整報告">siTRF1 × TRF1 ChIP-seq 整合分析｜完整報告</h1>
 <p><strong>作者</strong>：Eric Yang <strong>日期</strong>：2026-05-24 <strong>目的</strong>：判定 TRF1 是否為 siTRF1 後 274 個 DEGs 的直接轉錄調控因子，並用多重方法 / 多個基因組註解 / 文獻互相驗證。</p>
 <hr />
@@ -1639,6 +1741,157 @@
 </table>
 <p>→ 最嚴謹的模型是：<code>siTRF1 -&gt; TERF1/TRF1 reduction -&gt; telomere protection / replication stress -&gt; DDR / ISR / UPR / IFN / mitochondrial response genes changed</code>。</p>
 <p>輸出檔： - <a href="../results/trf1_binding_error/trf1_binding_error_network_summary.md">results/trf1_binding_error/trf1_binding_error_network_summary.md</a> - <a href="trf1_binding_error_interpretation.md">docs/trf1_binding_error_interpretation.md</a></p>
+<h3 id="trf1-實際-binding-位置分布-vs-deg-空間-overlap多資料集比較">17.6 TRF1 實際 binding 位置分布 vs DEG 空間 overlap（多資料集比較）</h3>
+<p>從另一個方向問：<strong>TRF1 在基因組的哪裡 binding？這些位置跟 274 個 DEG 在空間上重疊嗎？這個分布在不同 cell type 之間有差異嗎？</strong></p>
+<p>使用三份資料分開分析，各自保留原始 genome 版本（不做 liftover）：</p>
+<h4 id="資料集-aencode-encsr031wwmhg38hepg2-肝癌2022">資料集 A：ENCODE ENCSR031WWM（hg38，HepG2 肝癌，2022）</h4>
+<p>CRISPR-tagged endogenous TERF1 ChIP-seq，conservative IDR thresholded peaks，<strong>3,284 peaks</strong>。</p>
+<p><strong>Peak 位置分布</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th>region</th>
+<th style="text-align: right;">n_peaks</th>
+<th style="text-align: right;">% of total</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>5’ subtelomere (&lt;100 kb)</td>
+<td style="text-align: right;">15</td>
+<td style="text-align: right;">0.5%</td>
+</tr>
+<tr class="even">
+<td>3’ subtelomere (&lt;100 kb)</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">0.7%</td>
+</tr>
+<tr class="odd">
+<td>5’ near-telomere (100kb–1Mb)</td>
+<td style="text-align: right;">213</td>
+<td style="text-align: right;">6.5%</td>
+</tr>
+<tr class="even">
+<td>interstitial (&gt;1 Mb from any end)</td>
+<td style="text-align: right;">3,034</td>
+<td style="text-align: right;"><strong>92.4%</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Fold enrichment 高（最強 86.9×）。229 個 cluster，top clusters 集中在 chr20、chr14、chr16、chr19 pericentromeric 區。</p>
+<p><strong>與 274 siTRF1 DEG 的 overlap（hg38 TSS）</strong>：</p>
+<table>
+<thead>
+<tr class="header">
+<th style="text-align: right;">window</th>
+<th style="text-align: right;">DEG within window</th>
+<th style="text-align: right;">% of 274</th>
+<th style="text-align: right;">Enrichment vs background</th>
+<th style="text-align: right;">p-value</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td style="text-align: right;">±1 kb</td>
+<td style="text-align: right;">22</td>
+<td style="text-align: right;">8.0%</td>
+<td style="text-align: right;">~2.1× (expected 10.3)</td>
+<td style="text-align: right;">7.5e-04</td>
+</tr>
+<tr class="even">
+<td style="text-align: right;">±5 kb</td>
+<td style="text-align: right;">28</td>
+<td style="text-align: right;">10.2%</td>
+<td style="text-align: right;">~1.9×</td>
+<td style="text-align: right;">8.0e-04</td>
+</tr>
+<tr class="odd">
+<td style="text-align: right;">±10 kb</td>
+<td style="text-align: right;">33</td>
+<td style="text-align: right;">12.0%</td>
+<td style="text-align: right;">~1.8×</td>
+<td style="text-align: right;">9.6e-04</td>
+</tr>
+</tbody>
+</table>
+<p>DEG 有統計顯著 enrichment（p &lt; 0.001）。±10 kb 內 33 個 DEG 包含：<code>ASNS</code>、<code>MLEC</code>、<code>TOMM34</code>、<code>REXO5</code>、<code>UBP1</code> 等。</p>
+<p>⚠️ <strong>限制</strong>：HepG2 是肝癌細胞，與 siTRF1 實驗的 cell context 不匹配。</p>
+<hr />
+<h4 id="資料集-bgsm1328844hg19lcl-lymphoblastoid2014">資料集 B：GSM1328844（hg19，LCL lymphoblastoid，2014）</h4>
+<p>TERF1 ChIP-seq，包含<strong>端粒 reads 移除（rmvtel）版本</strong>。這是目前公開資料中 cell type 最接近正常非癌細胞的 TERF1 ChIP-seq。</p>
+<table>
+<thead>
+<tr class="header">
+<th>版本</th>
+<th style="text-align: right;">peaks</th>
+<th style="text-align: right;">Interstitial %</th>
+<th>說明</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>Full peaks</td>
+<td style="text-align: right;">439</td>
+<td style="text-align: right;">92.9%</td>
+<td>含端粒 reads</td>
+</tr>
+<tr class="even">
+<td>rmvtel（端粒 reads 移除後）</td>
+<td style="text-align: right;"><strong>71</strong></td>
+<td style="text-align: right;">100%</td>
+<td>真正非端粒 binding</td>
+</tr>
+</tbody>
+</table>
+<p><strong>關鍵比較</strong>：LCL 移除端粒 reads 後只剩 <strong>71 個非端粒 peaks</strong>；而 HepG2 有 <strong>3,284 peaks</strong>——差距 <strong>46 倍</strong>。</p>
+<p>⚠️ <strong>限制</strong>：hg19 座標，無法直接與 hg38 DEG TSS 做 overlap（不做 liftover）；LCL 也不是 siTRF1 實驗的 cell context。</p>
+<hr />
+<h4 id="三份資料並排總結">三份資料並排總結</h4>
+<table>
+<thead>
+<tr class="header">
+<th>資料集</th>
+<th>Genome</th>
+<th>Cell type</th>
+<th style="text-align: right;">Total peaks</th>
+<th style="text-align: right;">非端粒 peaks</th>
+<th style="text-align: right;">DEG ±10kb overlap</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>GSM638201</td>
+<td>hg18</td>
+<td>不明（2008）</td>
+<td style="text-align: right;">953</td>
+<td style="text-align: right;">~836（interstitial）</td>
+<td style="text-align: right;">0（hg18 RefSeq）</td>
+</tr>
+<tr class="even">
+<td>GSM1328844 rmvtel</td>
+<td>hg19</td>
+<td>LCL（類正常）</td>
+<td style="text-align: right;">71</td>
+<td style="text-align: right;">71（100%）</td>
+<td style="text-align: right;">未做（hg19）</td>
+</tr>
+<tr class="odd">
+<td>ENCSR031WWM</td>
+<td>hg38</td>
+<td>HepG2（肝癌）</td>
+<td style="text-align: right;">3,284</td>
+<td style="text-align: right;">3,034（92%）</td>
+<td style="text-align: right;">33（p&lt;0.001）</td>
+</tr>
+</tbody>
+</table>
+<h4 id="解讀">解讀</h4>
+<ol type="1">
+<li><p><strong>LCL（類正常細胞）vs HepG2（癌症）差距 46 倍</strong>：在正常細胞中 TERF1 非端粒 binding 很少（71 peaks）；HepG2 的大量 interstitial binding 很可能是癌症特有的 accessible chromatin 造成的，不代表 TERF1 的正常 regulatory 行為。</p></li>
+<li><p><strong>HepG2 的 DEG enrichment（p &lt; 0.001）需謹慎解讀</strong>：enrichment 約 2 倍，達統計顯著，但背景是 cancer-specific 高密度 binding（每 ~900 kb 一個 peak），而且 cell type 完全不匹配 siTRF1 實驗。</p></li>
+<li><p><strong>綜合判斷</strong>：在最接近正常細胞的 LCL 資料中，非端粒 TERF1 binding 極少且無法對應 DEG；只有在 HepG2 癌症 context 下才看到 DEG 附近有顯著 binding。這不支持在 siTRF1 BJ 系統中 TRF1 直接調控 DEG 的模型。</p></li>
+</ol>
+<p>輸出檔： - <a href="../results/integration_analysis/peak_location_analysis_hg38/peak_location_summary_hg38.md">results/integration_analysis/peak_location_analysis_hg38/peak_location_summary_hg38.md</a> - <a href="../results/integration_analysis/peak_location_analysis_hg38/deg_peak_overlap_matrix.tsv">results/integration_analysis/peak_location_analysis_hg38/deg_peak_overlap_matrix.tsv</a> - <a href="../results/integration_analysis/peak_location_analysis_hg38/deg_within_100kb.tsv">results/integration_analysis/peak_location_analysis_hg38/deg_within_100kb.tsv</a> - input (hg38): <code>data/ENCFF540ATM_TERF1_hg38_conservative_IDR.bed.gz</code> (ENCODE ENCSR031WWM) - input (hg19): <code>data/GSM1328844_LCL_TERF1_hg19_rmvtel.encodePeak.gz</code> (GEO GSM1328844) - scripts: <a href="../scripts/peak_location_distribution_hg38.py">scripts/peak_location_distribution_hg38.py</a></p>
 <hr />
 <h2 id="給教授可直接引用的版本">18. 給教授可直接引用的版本</h2>
 <blockquote>

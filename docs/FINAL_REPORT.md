@@ -752,6 +752,80 @@ ChIP-Atlas overlap candidates 的 AlphaGenome BJ ranking：
 - [results/trf1_binding_error/trf1_binding_error_network_summary.md](../results/trf1_binding_error/trf1_binding_error_network_summary.md)
 - [docs/trf1_binding_error_interpretation.md](trf1_binding_error_interpretation.md)
 
+### 17.6 TRF1 實際 binding 位置分布 vs DEG 空間 overlap（多資料集比較）
+
+從另一個方向問：**TRF1 在基因組的哪裡 binding？這些位置跟 274 個 DEG 在空間上重疊嗎？這個分布在不同 cell type 之間有差異嗎？**
+
+使用三份資料分開分析，各自保留原始 genome 版本（不做 liftover）：
+
+#### 資料集 A：ENCODE ENCSR031WWM（hg38，HepG2 肝癌，2022）
+
+CRISPR-tagged endogenous TERF1 ChIP-seq，conservative IDR thresholded peaks，**3,284 peaks**。
+
+**Peak 位置分布**：
+
+| region | n_peaks | % of total |
+|---|---:|---:|
+| 5' subtelomere (<100 kb) | 15 | 0.5% |
+| 3' subtelomere (<100 kb) | 22 | 0.7% |
+| 5' near-telomere (100kb–1Mb) | 213 | 6.5% |
+| interstitial (>1 Mb from any end) | 3,034 | **92.4%** |
+
+Fold enrichment 高（最強 86.9×）。229 個 cluster，top clusters 集中在 chr20、chr14、chr16、chr19 pericentromeric 區。
+
+**與 274 siTRF1 DEG 的 overlap（hg38 TSS）**：
+
+| window | DEG within window | % of 274 | Enrichment vs background | p-value |
+|---:|---:|---:|---:|---:|
+| ±1 kb | 22 | 8.0% | ~2.1× (expected 10.3) | 7.5e-04 |
+| ±5 kb | 28 | 10.2% | ~1.9× | 8.0e-04 |
+| ±10 kb | 33 | 12.0% | ~1.8× | 9.6e-04 |
+
+DEG 有統計顯著 enrichment（p < 0.001）。±10 kb 內 33 個 DEG 包含：`ASNS`、`MLEC`、`TOMM34`、`REXO5`、`UBP1` 等。
+
+⚠️ **限制**：HepG2 是肝癌細胞，與 siTRF1 實驗的 cell context 不匹配。
+
+---
+
+#### 資料集 B：GSM1328844（hg19，LCL lymphoblastoid，2014）
+
+TERF1 ChIP-seq，包含**端粒 reads 移除（rmvtel）版本**。這是目前公開資料中 cell type 最接近正常非癌細胞的 TERF1 ChIP-seq。
+
+| 版本 | peaks | Interstitial % | 說明 |
+|---|---:|---:|---|
+| Full peaks | 439 | 92.9% | 含端粒 reads |
+| rmvtel（端粒 reads 移除後）| **71** | 100% | 真正非端粒 binding |
+
+**關鍵比較**：LCL 移除端粒 reads 後只剩 **71 個非端粒 peaks**；而 HepG2 有 **3,284 peaks**——差距 **46 倍**。
+
+⚠️ **限制**：hg19 座標，無法直接與 hg38 DEG TSS 做 overlap（不做 liftover）；LCL 也不是 siTRF1 實驗的 cell context。
+
+---
+
+#### 三份資料並排總結
+
+| 資料集 | Genome | Cell type | Total peaks | 非端粒 peaks | DEG ±10kb overlap |
+|---|---|---|---:|---:|---:|
+| GSM638201 | hg18 | 不明（2008）| 953 | ~836（interstitial）| 0（hg18 RefSeq）|
+| GSM1328844 rmvtel | hg19 | LCL（類正常）| 71 | 71（100%）| 未做（hg19）|
+| ENCSR031WWM | hg38 | HepG2（肝癌）| 3,284 | 3,034（92%）| 33（p<0.001）|
+
+#### 解讀
+
+1. **LCL（類正常細胞）vs HepG2（癌症）差距 46 倍**：在正常細胞中 TERF1 非端粒 binding 很少（71 peaks）；HepG2 的大量 interstitial binding 很可能是癌症特有的 accessible chromatin 造成的，不代表 TERF1 的正常 regulatory 行為。
+
+2. **HepG2 的 DEG enrichment（p < 0.001）需謹慎解讀**：enrichment 約 2 倍，達統計顯著，但背景是 cancer-specific 高密度 binding（每 ~900 kb 一個 peak），而且 cell type 完全不匹配 siTRF1 實驗。
+
+3. **綜合判斷**：在最接近正常細胞的 LCL 資料中，非端粒 TERF1 binding 極少且無法對應 DEG；只有在 HepG2 癌症 context 下才看到 DEG 附近有顯著 binding。這不支持在 siTRF1 BJ 系統中 TRF1 直接調控 DEG 的模型。
+
+輸出檔：
+- [results/integration_analysis/peak_location_analysis_hg38/peak_location_summary_hg38.md](../results/integration_analysis/peak_location_analysis_hg38/peak_location_summary_hg38.md)
+- [results/integration_analysis/peak_location_analysis_hg38/deg_peak_overlap_matrix.tsv](../results/integration_analysis/peak_location_analysis_hg38/deg_peak_overlap_matrix.tsv)
+- [results/integration_analysis/peak_location_analysis_hg38/deg_within_100kb.tsv](../results/integration_analysis/peak_location_analysis_hg38/deg_within_100kb.tsv)
+- input (hg38): `data/ENCFF540ATM_TERF1_hg38_conservative_IDR.bed.gz` (ENCODE ENCSR031WWM)
+- input (hg19): `data/GSM1328844_LCL_TERF1_hg19_rmvtel.encodePeak.gz` (GEO GSM1328844)
+- scripts: [scripts/peak_location_distribution_hg38.py](../scripts/peak_location_distribution_hg38.py)
+
 ---
 
 ## 18. 給教授可直接引用的版本
